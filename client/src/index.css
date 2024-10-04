@@ -12,7 +12,7 @@
 #navbar {
   height: 10vh;
   width: 100vw;
-  display: flex; 
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 50px;
@@ -27,11 +27,10 @@
   height: 100vh;
   width: 100vw;
   padding-top: 50px;
- 
 }
 
 #auth-form {
-  height: 40vh;
+  height: auto;
   width: 40vw;
   display: flex;
   flex-direction: column;
@@ -40,6 +39,7 @@
   gap: 50px;
   border: 1px solid black;
   margin: 25px;
+  padding: 20px;
 }
 
 #auth-form > input {

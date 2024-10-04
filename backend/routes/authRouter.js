@@ -14,7 +14,7 @@ authRouter.post('/signup', async (req, res, next) => {
         res.status(201).json({ token, user: { id: user._id, username, email } });
     } catch (err) {
         if (err.code === 11000) {
-            res.status(400).json({ message: 'Username or email already exists.' });
+            res.status(403).json({ message: 'Username or email already exists.' });
         } else {
             next(err);
         }
