@@ -89,9 +89,64 @@ export default function UserProvider(props) {
     }
   }
 
+  async function addIssue(newIssue) {
+    try {
+      const res = await userAxios.post("api/issues/", newIssue);
+      setUserState((prevState) => {
+        return {
+          ...prevState,
+          issues: [...prevState.issues, res.data],
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Delete issue function
+  async function deleteIssue(issueId) {
+    try {
+      await userAxios.delete(`/api/issues/${issueId}`);
+      setUserState((prevState) => {
+        return {
+          ...prevState,
+          issues: prevState.issues.filter((issue) => issue._id !== issueId),
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Edit issue function
+  async function editIssue(issueId, updatedIssue) {
+    try {
+      const res = await userAxios.put(`/api/issues/${issueId}`, updatedIssue);
+      setUserState((prevState) => {
+        return {
+          ...prevState,
+          issues: prevState.issues.map((issue) =>
+            issue._id === issueId ? res.data : issue
+          ),
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <UserContext.Provider
-      value={{ ...userState, signup, login, logout, getUserIssues }}
+      value={{
+        ...userState,
+        signup,
+        login,
+        logout,
+        getUserIssues,
+        addIssue,
+        editIssue,
+        deleteIssue,
+      }}
     >
       {props.children}
     </UserContext.Provider>

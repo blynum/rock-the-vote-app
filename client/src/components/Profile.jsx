@@ -1,9 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../context/UserProvider";
 import IssueList from "./IssueList";
+import IssueForm from "./IssueForm";
 
 function Profile() {
-  const { user, getUserIssues, issues } = useContext(UserContext);
+  const { user, getUserIssues, issues, deleteIssue, editIssue } =
+    useContext(UserContext);
 
   useEffect(() => {
     getUserIssues();
@@ -12,7 +14,8 @@ function Profile() {
   return (
     <>
       <h1>Username: {user.username}</h1>
-      <IssueList issues={issues} />
+      <IssueForm />
+      <IssueList issues={issues} onDelete={deleteIssue} onEdit={editIssue} />
     </>
   );
 }
