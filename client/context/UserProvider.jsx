@@ -3,6 +3,14 @@ import axios from "axios";
 
 export const UserContext = React.createContext();
 
+const userAxios = axios.create();
+
+userAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 export default function UserProvider(props) {
   const initState = {
     user: JSON.parse(localStorage.getItem("user")) || {},
@@ -67,8 +75,24 @@ export default function UserProvider(props) {
     }
   }
 
+  async function getUserIssues() {
+    try {
+      const res = await userAxios.get("/api/issues/my-issues");
+      setUserState((prevState) => {
+        return {
+          ...prevState,
+          issues: res.data,
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <UserContext.Provider value={{ ...userState, signup, login, logout }}>
+    <UserContext.Provider
+      value={{ ...userState, signup, login, logout, getUserIssues }}
+    >
       {props.children}
     </UserContext.Provider>
   );
