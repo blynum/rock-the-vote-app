@@ -16,6 +16,7 @@ export default function UserProvider(props) {
     user: JSON.parse(localStorage.getItem("user")) || {},
     token: localStorage.getItem("token") || "",
     issues: [],
+    errMsg: "",
   };
 
   const [userState, setUserState] = useState(initState);
@@ -33,10 +34,11 @@ export default function UserProvider(props) {
           token: token,
         };
       });
-
-      console.log(res.data);
     } catch (error) {
-      console.log(error);
+      // Check if response exists before trying to access it
+      const errorMessage =
+        error.response?.data?.errMsg || "Email Already Taken.";
+      handleAuthErr(errorMessage);
     }
   }
 
@@ -53,9 +55,11 @@ export default function UserProvider(props) {
           token: token,
         };
       });
-      console.log(res.data);
     } catch (error) {
-      console.log(error);
+      // Check if response exists before trying to access it
+      const errorMessage =
+        error.response?.data?.errMsg || "Incorrect Username/Email or Password.";
+      handleAuthErr(errorMessage);
     }
   }
 
@@ -73,6 +77,40 @@ export default function UserProvider(props) {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function handleAuthErr(errMsg) {
+    setUserState((prevUserState) => {
+      return {
+        ...prevUserState,
+        errMsg,
+      };
+    });
+  }
+
+  function resetAuthErr() {
+    setUserState((prevUserState) => {
+      return {
+        ...prevUserState,
+        errMsg: "",
+      };
+    });
+  }
+  /*   function resetAuthErr() {
+    setUserState((prevUserState) => {
+      return {
+        ...prevUserState,
+        errMsg: "",
+      };
+    });
+  } */
+  function resetAuthErr() {
+    setUserState((prevUserState) => {
+      return {
+        ...prevUserState,
+        errMsg: "",
+      };
+    });
   }
 
   async function getUserIssues() {
@@ -146,6 +184,8 @@ export default function UserProvider(props) {
         addIssue,
         editIssue,
         deleteIssue,
+        handleAuthErr,
+        resetAuthErr,
       }}
     >
       {props.children}

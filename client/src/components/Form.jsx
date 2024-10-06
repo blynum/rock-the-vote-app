@@ -4,7 +4,7 @@ function Form(props) {
   const initState = { username: "", email: "", password: "" }; // Initial state includes all fields
 
   const [formData, setFormData] = useState(initState);
-  const { isMember, submit } = props;
+  const { isMember, submit, errMsg } = props;
 
   // Handle input changes
   function handleChange(e) {
@@ -56,6 +56,7 @@ function Form(props) {
       />
 
       <button type="submit">{isMember ? "Login" : "Signup"}</button>
+      <p style={{ color: "red" }}>{errMsg}</p>
     </form>
   );
 }
