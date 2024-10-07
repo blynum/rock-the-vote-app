@@ -8,13 +8,18 @@ export default function PublicPage() {
 
   useEffect(() => {
     getAllIssues(); // Fetch all issues using context function
-  }, []);
+  }, [getAllIssues]);
+
+  // Sort issues by the number of upvotes in descending order
+  const sortedIssues = [...issues].sort(
+    (a, b) => b.upvotes.length - a.upvotes.length
+  );
 
   return (
     <div>
       <h1>All Issues</h1>
       <IssueList
-        issues={issues}
+        issues={sortedIssues}
         handleUpvote={handleUpvote}
         handleDownvote={handleDownvote}
       />

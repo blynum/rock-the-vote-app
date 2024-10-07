@@ -1,5 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/UserProvider";
+import CommentList from "./CommentList";
+import CommentForm from "./CommentForm";
 
 export default function Issue(props) {
   const {
@@ -14,27 +16,74 @@ export default function Issue(props) {
     onEdit,
   } = props;
 
-  const { handleUpvote, handleDownvote } = useContext(UserContext);
+  const {
+    handleUpvote,
+    handleDownvote,
+    fetchComments,
+    addComment,
+    editComment,
+    deleteComment,
+  } = useContext(UserContext);
 
-  // State to manage edit mode and updated values
+  // State for managing issue edit mode
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title || "");
   const [newDescription, setNewDescription] = useState(description || "");
   const [newImgURL, setNewImgURL] = useState(imgURL || "");
 
-  // Handle delete action (only if onDelete is passed)
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(_id); // Call the delete function passed as prop
+  // State for managing comments
+  const [comments, setComments] = useState([]);
+
+  // Fetch comments when component mounts
+  // Fetch comments only once when the component mounts
+  useEffect(() => {
+    let isMounted = true; // Track if component is still mounted
+    async function loadComments() {
+      const fetchedComments = await fetchComments(_id);
+      if (isMounted) setComments(fetchedComments); // Only set state if mounted
+    }
+    loadComments();
+
+    // Cleanup function to set isMounted to false if component unmounts
+    return () => {
+      isMounted = false;
+    };
+  }, [_id]); // Only depend on `_id` so it runs once per issue
+
+  // Handle adding a new comment
+  const handleAddComment = async (text) => {
+    try {
+      const newComment = await addComment(_id, text); // Get the new comment
+      setComments((prevComments) => [...prevComments, newComment]); // Add it to state
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
-  // Toggle between editing and viewing modes
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
+  // Handle editing a comment
+  const handleEditComment = async (commentId, updatedText) => {
+    const updatedComment = await editComment(commentId, updatedText);
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment._id === commentId ? updatedComment : comment
+      )
+    );
   };
 
-  // Handle save action for editing (only if onEdit is passed)
+  // Handle deleting a comment
+  const handleDeleteComment = async (commentId) => {
+    await deleteComment(commentId);
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment._id !== commentId)
+    );
+  };
+
+  const handleDelete = () => {
+    if (onDelete) onDelete(_id);
+  };
+
+  const handleEditToggle = () => setIsEditing(!isEditing);
+
   const handleSave = () => {
     if (onEdit) {
       const updatedIssue = {
@@ -42,15 +91,14 @@ export default function Issue(props) {
         description: newDescription,
         imgURL: newImgURL,
       };
-      onEdit(_id, updatedIssue); // Call the edit function passed as prop
-      setIsEditing(false); // Exit editing mode
+      onEdit(_id, updatedIssue);
+      setIsEditing(false);
     }
   };
 
   return (
     <div className="issue-card">
       {isEditing ? (
-        // Edit mode: Wrap input fields in a div with class 'edit-mode'
         <div className="edit-mode">
           <input
             type="text"
@@ -69,8 +117,6 @@ export default function Issue(props) {
             onChange={(e) => setNewImgURL(e.target.value)}
             placeholder="Image URL"
           />
-
-          {/* Buttons for saving or canceling edit */}
           <div className="edit-buttons">
             <button className="save-btn" onClick={handleSave}>
               Save
@@ -81,17 +127,13 @@ export default function Issue(props) {
           </div>
         </div>
       ) : (
-        // View mode: Display issue details
         <>
           <h1>{title}</h1>
           <h4>{description}</h4>
-          <p>Posted by: {username}</p> {/* Display username */}
+          <p>Posted by: {username}</p>
           {imgURL && <img src={imgURL} alt="Issue" />}
-          {/* Only render the Delete button if onDelete is passed */}
           {onDelete && <button onClick={handleDelete}>Delete</button>}
-          {/* Only render the Edit button if onEdit is passed */}
           {onEdit && <button onClick={handleEditToggle}>Edit</button>}
-          {/* Upvote and Downvote Buttons */}
           <div className="vote-buttons">
             <button onClick={() => handleUpvote(_id)}>
               Upvote ({upvotes.length})
@@ -100,6 +142,13 @@ export default function Issue(props) {
               Downvote ({downvotes.length})
             </button>
           </div>
+          {/* Comment Form and List */}
+          <CommentForm issueId={_id} onCommentAdded={handleAddComment} />
+          <CommentList
+            comments={comments}
+            onEdit={handleEditComment}
+            onDelete={handleDeleteComment}
+          />
         </>
       )}
     </div>

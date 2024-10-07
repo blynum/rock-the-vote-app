@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/authRouter');
 const issuesRoutes = require('./routes/issueRouter');
+const commentRouter = require("./routes/CommentRouter");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/issues', issuesRoutes);
+app.use("/api/comments", commentRouter);
 
 // Root Route
 app.get('/', (req, res) => {

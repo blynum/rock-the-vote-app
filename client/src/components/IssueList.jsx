@@ -7,6 +7,10 @@ export default function IssueList({
   onEdit,
   handleUpvote,
   handleDownvote,
+  fetchComments,
+  addComment,
+  editComment,
+  deleteComment,
 }) {
   return (
     <div>
@@ -18,6 +22,10 @@ export default function IssueList({
           onEdit={onEdit}
           handleUpvote={handleUpvote}
           handleDownvote={handleDownvote}
+          fetchComments={fetchComments}
+          addComment={addComment}
+          editComment={editComment}
+          deleteComment={deleteComment}
         />
       ))}
     </div>
