@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../../context/UserProvider";
 
 export default function Issue(props) {
-  const { _id, title, description, imgURL, onDelete, onEdit } = props;
+  const {
+    _id,
+    title,
+    description,
+    imgURL,
+    username,
+    upvotes = [],
+    downvotes = [],
+    onDelete,
+    onEdit,
+  } = props;
+
+  const { handleUpvote, handleDownvote } = useContext(UserContext);
 
   // State to manage edit mode and updated values
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(title);
-  const [newDescription, setNewDescription] = useState(description);
-  const [newImgURL, setNewImgURL] = useState(imgURL);
+  const [newTitle, setNewTitle] = useState(title || "");
+  const [newDescription, setNewDescription] = useState(description || "");
+  const [newImgURL, setNewImgURL] = useState(imgURL || "");
 
   // Handle delete action (only if onDelete is passed)
   const handleDelete = () => {
@@ -72,11 +85,21 @@ export default function Issue(props) {
         <>
           <h1>{title}</h1>
           <h4>{description}</h4>
+          <p>Posted by: {username}</p> {/* Display username */}
           {imgURL && <img src={imgURL} alt="Issue" />}
           {/* Only render the Delete button if onDelete is passed */}
           {onDelete && <button onClick={handleDelete}>Delete</button>}
           {/* Only render the Edit button if onEdit is passed */}
           {onEdit && <button onClick={handleEditToggle}>Edit</button>}
+          {/* Upvote and Downvote Buttons */}
+          <div className="vote-buttons">
+            <button onClick={() => handleUpvote(_id)}>
+              Upvote ({upvotes.length})
+            </button>
+            <button onClick={() => handleDownvote(_id)}>
+              Downvote ({downvotes.length})
+            </button>
+          </div>
         </>
       )}
     </div>

@@ -10,7 +10,7 @@ authRouter.post('/signup', async (req, res, next) => {
         const user = new User({ username, email, password });
         await user.save();
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         // Use withoutPassword method to remove the password before sending user data
         res.status(201).json({ token, user: user.withoutPassword() });
@@ -41,8 +41,8 @@ authRouter.post('/login', async (req, res, next) => {
             return res.status(401).json({ message: 'Incorrect Username/Email or Password.' });
         }
 
-        // Create token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        // Create token with both id and username
+        const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         // Use withoutPassword method to remove the password before sending user data
         res.json({ token, user: user.withoutPassword() });

@@ -4,8 +4,15 @@ import IssueList from "./IssueList";
 import IssueForm from "./IssueForm";
 
 function Profile() {
-  const { user, getUserIssues, issues, deleteIssue, editIssue } =
-    useContext(UserContext);
+  const {
+    user,
+    getUserIssues,
+    issues,
+    deleteIssue,
+    editIssue,
+    handleUpvote,
+    handleDownvote,
+  } = useContext(UserContext);
 
   useEffect(() => {
     getUserIssues();
@@ -15,7 +22,13 @@ function Profile() {
     <>
       <h1>Username: {user.username}</h1>
       <IssueForm />
-      <IssueList issues={issues} onDelete={deleteIssue} onEdit={editIssue} />
+      <IssueList
+        issues={issues}
+        onDelete={deleteIssue}
+        onEdit={editIssue}
+        handleUpvote={handleUpvote}
+        handleDownvote={handleDownvote}
+      />
     </>
   );
 }

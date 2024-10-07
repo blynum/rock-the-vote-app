@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import IssueList from "./IssueList"; // Reuse the same IssueList component
+import React, { useEffect, useContext } from "react";
+import IssueList from "./IssueList";
+import { UserContext } from "../../context/UserProvider";
 
 export default function PublicPage() {
-  const [publicIssues, setPublicIssues] = useState([]);
+  const { getAllIssues, handleUpvote, handleDownvote, issues } =
+    useContext(UserContext);
 
   useEffect(() => {
-    async function fetchAllIssues() {
-      try {
-        const res = await axios.get("/api/issues"); // Fetch all issues
-        setPublicIssues(res.data); // Set the response data to the state
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchAllIssues();
-  }, []); // Run this effect on component mount
+    getAllIssues(); // Fetch all issues using context function
+  }, []);
 
   return (
     <div>
       <h1>All Issues</h1>
-      <IssueList issues={publicIssues} /> {/* Reuse IssueList component */}
+      <IssueList
+        issues={issues}
+        handleUpvote={handleUpvote}
+        handleDownvote={handleDownvote}
+      />
     </div>
   );
 }

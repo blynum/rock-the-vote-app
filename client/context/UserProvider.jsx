@@ -128,14 +128,13 @@ export default function UserProvider(props) {
   }
 
   async function addIssue(newIssue) {
+    console.log("Payload for new issue:", newIssue); // Log the payload
     try {
       const res = await userAxios.post("api/issues/", newIssue);
-      setUserState((prevState) => {
-        return {
-          ...prevState,
-          issues: [...prevState.issues, res.data],
-        };
-      });
+      setUserState((prevState) => ({
+        ...prevState,
+        issues: [...prevState.issues, res.data],
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -173,6 +172,46 @@ export default function UserProvider(props) {
     }
   }
 
+  async function handleUpvote(issueId) {
+    try {
+      const res = await userAxios.put(`/api/issues/upvotes/${issueId}`);
+      setUserState((prevUserState) => ({
+        ...prevUserState,
+        issues: prevUserState.issues.map((issue) =>
+          issue._id === issueId ? res.data : issue
+        ),
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function handleDownvote(issueId) {
+    try {
+      const res = await userAxios.put(`/api/issues/downvotes/${issueId}`);
+      setUserState((prevUserState) => ({
+        ...prevUserState,
+        issues: prevUserState.issues.map((issue) =>
+          issue._id === issueId ? res.data : issue
+        ),
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getAllIssues() {
+    try {
+      const res = await userAxios.get("/api/issues");
+      setUserState((prevState) => ({
+        ...prevState,
+        issues: res.data,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -181,11 +220,14 @@ export default function UserProvider(props) {
         login,
         logout,
         getUserIssues,
+        getAllIssues,
         addIssue,
         editIssue,
         deleteIssue,
         handleAuthErr,
         resetAuthErr,
+        handleUpvote,
+        handleDownvote,
       }}
     >
       {props.children}

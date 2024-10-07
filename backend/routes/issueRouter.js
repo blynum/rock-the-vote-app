@@ -16,14 +16,30 @@ issueRouter.get('/my-issues', authenticate, async (req, res, next) => {
 // Add New Issue
 issueRouter.post('/', authenticate, async (req, res, next) => {
     try {
-        const { title, description } = req.body;
-        const issue = new Issue({ title, description, userId: req.auth.id });  // Set userId
-        await issue.save();
-        res.status(201).json(issue);
-    } catch (err) {
-        next(err);
+        // Log `req.auth` and `req.body` for debugging
+        console.log("Auth content:", req.auth);
+        console.log("Request body before assignment:", req.body);
+
+        // Assign values from `req.auth` to `req.body`
+        req.body.userId = req.auth.id;
+        req.body.username = req.auth.username;
+
+        console.log("Request body after assignment:", req.body);
+
+        // Create the issue directly from `req.body`
+        const newIssue = new Issue(req.body);
+        const savedIssue = await newIssue.save();
+        res.status(201).json(savedIssue);
+    } catch (error) {
+        console.error("Error saving issue:", error);
+        res.status(500);
+        next(error);
     }
 });
+
+
+
+
 
 // Get All Issues
 issueRouter.get('/', async (req, res, next) => {
@@ -89,6 +105,46 @@ issueRouter.delete('/:id', authenticate, async (req, res, next) => {
         next(err);
     }
 });
+
+
+// Upvote Route
+issueRouter.put('/upvotes/:issueId', authenticate, async (req, res, next) => {
+    try {
+        const updatedIssue = await Issue.findByIdAndUpdate(
+            req.params.issueId,
+            {
+                $addToSet: { upvotes: req.auth.id },
+                $pull: { downvotes: req.auth.id }
+            },
+            { new: true }
+        );
+        res.status(201).json(updatedIssue);
+    } catch (error) {
+        res.status(500);
+        next(error);
+    }
+});
+
+// Downvote Route
+issueRouter.put('/downvotes/:issueId', authenticate, async (req, res, next) => {
+    try {
+        const updatedIssue = await Issue.findByIdAndUpdate(
+            req.params.issueId,
+            {
+                $addToSet: { downvotes: req.auth.id },
+                $pull: { upvotes: req.auth.id }
+            },
+            { new: true }
+        );
+        res.status(201).json(updatedIssue);
+    } catch (error) {
+        res.status(500);
+        next(error);
+    }
+});
+
+
+
 
 
 module.exports = issueRouter;

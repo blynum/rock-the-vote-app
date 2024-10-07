@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../../context/UserProvider";
 
 export default function IssueForm() {
-  const { addIssue } = useContext(UserContext);
+  const { addIssue, user } = useContext(UserContext); // Destructure user from context
 
   const initState = {
     title: "",
@@ -24,7 +24,9 @@ export default function IssueForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    addIssue(formData);
+    console.log("Username from user context:", user.username); // Log for debugging
+    const issueData = { ...formData, username: user.username }; // Add username
+    addIssue(issueData);
     setFormData(initState);
   }
 
