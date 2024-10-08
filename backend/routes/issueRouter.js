@@ -78,6 +78,7 @@ issueRouter.put('/:id', authenticate, async (req, res, next) => {
         if (title) issue.title = title;
         if (description) issue.description = description;
         if (votes !== undefined) issue.votes = votes;
+        if (imgUrl) issue.imgUrl = imgUrl;  // Update image URL if provided
 
         await issue.save();
         res.json(issue);

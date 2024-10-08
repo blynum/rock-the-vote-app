@@ -8,7 +8,7 @@ export default function Issue(props) {
     _id,
     title,
     description,
-    imgURL,
+    imgUrl,
     username,
     upvotes = [],
     downvotes = [],
@@ -29,13 +29,12 @@ export default function Issue(props) {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title || "");
   const [newDescription, setNewDescription] = useState(description || "");
-  const [newImgURL, setNewImgURL] = useState(imgURL || "");
+  const [newImgUrl, setNewImgUrl] = useState(imgUrl || "");
 
   // State for managing comments
   const [comments, setComments] = useState([]);
 
   // Fetch comments when component mounts
-  // Fetch comments only once when the component mounts
   useEffect(() => {
     let isMounted = true; // Track if component is still mounted
     async function loadComments() {
@@ -48,34 +47,16 @@ export default function Issue(props) {
     return () => {
       isMounted = false;
     };
-  }, [_id]); // Only depend on `_id` so it runs once per issue
+  }, [_id]);
 
   // Handle adding a new comment
   const handleAddComment = async (text) => {
     try {
-      const newComment = await addComment(_id, text); // Get the new comment
-      setComments((prevComments) => [...prevComments, newComment]); // Add it to state
+      const newComment = await addComment(_id, text);
+      setComments((prevComments) => [...prevComments, newComment]);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
-  };
-
-  // Handle editing a comment
-  const handleEditComment = async (commentId, updatedText) => {
-    const updatedComment = await editComment(commentId, updatedText);
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment._id === commentId ? updatedComment : comment
-      )
-    );
-  };
-
-  // Handle deleting a comment
-  const handleDeleteComment = async (commentId) => {
-    await deleteComment(commentId);
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment._id !== commentId)
-    );
   };
 
   const handleDelete = () => {
@@ -89,7 +70,7 @@ export default function Issue(props) {
       const updatedIssue = {
         title: newTitle,
         description: newDescription,
-        imgURL: newImgURL,
+        imgURL: newImgUrl,
       };
       onEdit(_id, updatedIssue);
       setIsEditing(false);
@@ -113,8 +94,8 @@ export default function Issue(props) {
           ></textarea>
           <input
             type="text"
-            value={newImgURL}
-            onChange={(e) => setNewImgURL(e.target.value)}
+            value={newImgUrl}
+            onChange={(e) => setNewImgUrl(e.target.value)}
             placeholder="Image URL"
           />
           <div className="edit-buttons">
@@ -131,7 +112,11 @@ export default function Issue(props) {
           <h1>{title}</h1>
           <h4>{description}</h4>
           <p>Posted by: {username}</p>
-          {imgURL && <img src={imgURL} alt="Issue" />}
+          {imgUrl ? (
+            <img src={imgUrl} alt="Issue" />
+          ) : (
+            <p>No image available</p>
+          )}
           {onDelete && (
             <button className="delete-btn" onClick={handleDelete}>
               Delete
@@ -150,12 +135,11 @@ export default function Issue(props) {
               Downvote ({downvotes.length})
             </button>
           </div>
-          {/* Comment Form and List */}
           <CommentForm issueId={_id} onCommentAdded={handleAddComment} />
           <CommentList
             comments={comments}
-            onEdit={handleEditComment}
-            onDelete={handleDeleteComment}
+            onEdit={editComment}
+            onDelete={deleteComment}
           />
         </>
       )}

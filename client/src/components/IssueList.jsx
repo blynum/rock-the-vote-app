@@ -14,20 +14,22 @@ export default function IssueList({
 }) {
   return (
     <div>
-      {issues.map((issue) => (
-        <Issue
-          key={issue._id}
-          {...issue}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          handleUpvote={handleUpvote}
-          handleDownvote={handleDownvote}
-          fetchComments={fetchComments}
-          addComment={addComment}
-          editComment={editComment}
-          deleteComment={deleteComment}
-        />
-      ))}
+      {issues.map((issue) => {
+        return (
+          <Issue
+            key={issue._id}
+            {...issue}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            handleUpvote={handleUpvote}
+            handleDownvote={handleDownvote}
+            fetchComments={fetchComments}
+            addComment={addComment}
+            editComment={editComment}
+            deleteComment={deleteComment}
+          />
+        );
+      })}
     </div>
   );
 }
