@@ -35,7 +35,7 @@ body {
 }
 
 #navbar button {
-  background-color: #4caf50;
+  background-color: #6a1b9a;
   color: white;
   border: none;
   border-radius: 4px;
@@ -44,7 +44,7 @@ body {
 }
 
 #navbar button:hover {
-  background-color: #45a049;
+  background-color: #9066aa;
 }
 
 /* Auth Form */
@@ -87,8 +87,9 @@ button:hover {
 
 /* Styling issue cards */
 .issue-card {
-  background-color: white;
-  margin: 20px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  margin: 15px 0;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -106,7 +107,7 @@ button:hover {
   margin-bottom: 15px;
 }
 
-.issue-card button {
+/*.issue-card button {
   margin-right: 10px;
   background-color: #f44336;
   color: white;
@@ -114,7 +115,7 @@ button:hover {
 
 .issue-card button:hover {
   background-color: #e53935;
-}
+} */
 
 .issue-card img {
   max-width: 100%;
@@ -123,12 +124,37 @@ button:hover {
   margin-top: 10px;
 }
 
-.issue-card button:last-of-type {
+/*.issue-card button:last-of-type {
   background-color: #ff9800;
 }
 
 .issue-card button:last-of-type:hover {
   background-color: #fb8c00;
+}
+
+/* Adjusted last-of-type selector to not impact downvote 
+.issue-card .edit-btn,
+.issue-card .delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.issue-card .edit-btn:hover,
+.issue-card .delete-btn:hover {
+  background-color: #e53935;
+}
+
+/* Hover effects */
+.vote-buttons .upvote:hover {
+  background-color: #218838;
+}
+
+.vote-buttons .downvote:hover {
+  background-color: #4a65d0;
+}
+
+.vote-buttons button:hover {
+  transform: translateY(-2px);
 }
 
 /* Issue Form Styling */
@@ -156,7 +182,7 @@ button:hover {
 }
 
 .issue-form button {
-  background-color: #007bff;
+  background-color: #757575;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -166,6 +192,54 @@ button:hover {
 
 .issue-form button:hover {
   background-color: #0056b3;
+}
+
+/* Style for edit and delete buttons */
+.edit-mode .edit-buttons button,
+.issue-card button {
+  padding: 8px 15px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* New spacing for delete and edit buttons */
+.issue-card button.delete-btn,
+.issue-card button.edit-btn {
+  margin-bottom: 15px; /* Adds space below delete/edit buttons */
+}
+
+/* Delete Button Styling */
+.delete-btn {
+  background-color: #f44336; /* Red color */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-right: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Edit Button Styling */
+.edit-btn {
+  background-color: #ff9800; /* Yellowish color */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  margin-bottom: 15px; /* Adds spacing below the edit button */
+}
+
+.edit-btn:hover {
+  background-color: #fb8c00;
 }
 
 /* Edit Mode Styling */
@@ -208,6 +282,122 @@ button:hover {
 
 .edit-mode button:hover {
   opacity: 0.9;
+}
+
+/* Comment Section Styling */
+.comment-list {
+  margin-top: 15px;
+}
+
+.comment {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.username {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.text {
+  color: #666;
+  margin: 0;
+}
+
+.comment-section {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.comment {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment .username {
+  font-weight: bold;
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+.comment .text {
+  color: #555;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.comment-form button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  background-color: #757575;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.comment-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Upvote/Downvote Buttons Styling */
+.upvote {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+/* Downvote button styling with new color */
+.vote-buttons .downvote {
+  background-color: #5f85ff; /* New color for downvote button */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.vote-buttons button {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.vote-buttons .upvote:hover {
+  background-color: #218838;
+}
+
+.vote-buttons .downvote:hover {
+  background-color: #4a65d0;
+}
+
+.vote-buttons button:hover {
+  transform: translateY(-2px);
 }
 
 /* Flex Layout for Save/Cancel buttons */

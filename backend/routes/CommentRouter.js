@@ -11,7 +11,7 @@ commentRouter.post("/", authenticate, async (req, res, next) => {
         console.log("req.auth:", req.auth);  // Log to verify token decoding
 
         const { text, issueId } = req.body;
-        const userId = req.auth.id;  // Make sure this is not undefined
+        const userId = req.auth.id;
 
         if (!text || !issueId || !userId) {
             return res.status(400).json({ message: "Missing required fields." });
@@ -19,12 +19,17 @@ commentRouter.post("/", authenticate, async (req, res, next) => {
 
         const newComment = new Comment({ text, issueId, userId });
         const savedComment = await newComment.save();
-        res.status(201).json(savedComment);
+
+        // Populate the userId with username
+        const populatedComment = await Comment.findById(savedComment._id).populate("userId", "username");
+
+        res.status(201).json(populatedComment); // Return the populated comment
     } catch (error) {
         console.error("Error in comment creation:", error);
         next(error);
     }
 });
+
 
 
 

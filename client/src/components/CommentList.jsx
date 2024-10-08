@@ -9,10 +9,10 @@ export default function CommentList({ comments = [] }) {
     <div className="comment-list">
       {comments.map((comment) => (
         <div key={comment._id} className="comment">
-          <p>
+          <p className="username">
             <strong>{comment.userId?.username}</strong> {/* Username */}
           </p>
-          <p>{comment.text}</p> {/* Comment text */}
+          <p className="text">{comment.text}</p> {/* Comment text */}
         </div>
       ))}
     </div>

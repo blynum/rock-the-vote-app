@@ -132,13 +132,21 @@ export default function Issue(props) {
           <h4>{description}</h4>
           <p>Posted by: {username}</p>
           {imgURL && <img src={imgURL} alt="Issue" />}
-          {onDelete && <button onClick={handleDelete}>Delete</button>}
-          {onEdit && <button onClick={handleEditToggle}>Edit</button>}
+          {onDelete && (
+            <button className="delete-btn" onClick={handleDelete}>
+              Delete
+            </button>
+          )}
+          {onEdit && (
+            <button className="edit-btn" onClick={handleEditToggle}>
+              Edit
+            </button>
+          )}
           <div className="vote-buttons">
-            <button onClick={() => handleUpvote(_id)}>
+            <button className="upvote" onClick={() => handleUpvote(_id)}>
               Upvote ({upvotes.length})
             </button>
-            <button onClick={() => handleDownvote(_id)}>
+            <button className="downvote" onClick={() => handleDownvote(_id)}>
               Downvote ({downvotes.length})
             </button>
           </div>
