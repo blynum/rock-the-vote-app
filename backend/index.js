@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const cors = require('cors');
+const path = require('path')
 
 const authRoutes = require('./routes/authRouter');
 const issuesRoutes = require('./routes/issueRouter');
@@ -16,6 +17,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, "client", "dist")))
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -50,7 +52,7 @@ const connectToMongoDB = async () => {
 
 connectToMongoDB();
 
-
+app.get("*", (req, res) => res.sendFile(path.join(__dirname, "client", "dist", "index.html")))
 
 // Start the server
 const PORT = process.env.PORT || 5001;
