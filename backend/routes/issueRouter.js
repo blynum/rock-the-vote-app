@@ -74,7 +74,7 @@ issueRouter.put('/:id', authenticate, async (req, res, next) => {
         }
 
         // Update the issue fields
-        const { title, description, votes } = req.body;
+        const { title, description, votes, imgUrl } = req.body;
         if (title) issue.title = title;
         if (description) issue.description = description;
         if (votes !== undefined) issue.votes = votes;
